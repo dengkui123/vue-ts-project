@@ -1,20 +1,16 @@
 <template>
   <div class="login-account">
-    <el-form ref="ruleFormRef" :model="phone" :rules="rules" size="large">
-      <el-form-item prop="phonenumber">
+    <el-form ref="formRef" :model="phone" :rules="rules" size="large">
+      <el-form-item prop="num">
         <el-input
-          v-model="phone.number"
+          v-model="phone.num"
           placeholder="手机号"
           prefix-icon="Iphone"
         ></el-input>
       </el-form-item>
-      <el-form-item prop="verify-code">
+      <el-form-item prop="code">
         <div class="flex verify-code">
-          <el-input
-            type="password"
-            v-model="phone.password"
-            placeholder="验证码"
-          >
+          <el-input type="password" v-model="phone.code" placeholder="验证码">
             <template #prefix>
               <el-icon class="el-input__icon">
                 <svg class="icon" aria-hidden="true">
@@ -31,18 +27,42 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from 'vue';
+import { defineComponent, reactive, ref } from 'vue';
+import { ElForm } from 'element-plus';
+import localCache from '@/utils/cache';
+
 import { rules } from '../config/phone-config';
+import { useStore } from 'vuex';
 
 export default defineComponent({
   setup() {
+    const store = useStore();
+
     const phone = reactive({
-      number: '',
-      password: ''
+      num: localCache.getCache('phonenum') ?? '',
+      code: ''
     });
+
+    const formRef = ref<InstanceType<typeof ElForm>>();
+    const loginAction = (isKeepPassword: boolean) => {
+      formRef.value?.validate((valid) => {
+        if (!valid) return;
+        // 1.判断是否需要记住密码
+        if (isKeepPassword) {
+          // 本地缓存
+          localCache.setCache('phonenum', phone.num);
+        } else {
+          localCache.deleteCache('phonenum');
+        }
+        // 2.进行登陆
+        store.dispatch('login/phoneLoginAction', { ...phone });
+      });
+    };
     return {
       phone,
-      rules
+      rules,
+      loginAction,
+      formRef
     };
   }
 });
@@ -51,7 +71,7 @@ export default defineComponent({
 <style lang="less" scoped>
 .login-account {
   margin-top: 20px;
-  ::v-deep .el-form {
+  :deep(.el-form) {
     .el-form-item {
       .verify-code {
         width: 100%;

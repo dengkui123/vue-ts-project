@@ -11,45 +11,14 @@ import './assets/css/index.less';
 import './assets/font/iconfont.js';
 
 import App from './App.vue';
-
-import router from './router';
 import store from './store';
-
+import router from './router';
+import { setupStore } from './store';
 const app = createApp(App);
-
+// 全局方法
 globalRegister(app);
+//调用初始化store函数
+setupStore();
 app.use(router);
 app.use(store);
 app.mount('#app');
-
-// request.request({
-//   url: '/api/home/multidata',
-//   method: 'get',
-//   interceptors: {
-//     requestInterceptor: (config) => {
-//       console.log('单独请求的config');
-//       return config;
-//     },
-//     responseInterceptor: (res) => {
-//       console.log('单独响应的response');
-//       return res;
-//     }
-//   }
-// });
-
-// interface DataType {
-//   data: any;
-//   returnCode: string;
-//   success: boolean;
-// }
-
-// service
-//   .get<DataType>({
-//     url: '/api/home/multidata',
-//     // method: 'get',
-//     showLoading: true
-//   })
-//   .then((res) => {
-//     console.log(res);
-//     console.log(res.data);
-//   });

@@ -1,12 +1,12 @@
 <template>
   <div class="login">
-    <login-panel />
+    <LoginPanel />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import LoginPanel from './comps/login-panel.vue';
+import LoginPanel from './comps/LoginPanel.vue';
 export default defineComponent({
   components: {
     LoginPanel

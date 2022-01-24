@@ -34,7 +34,7 @@ class Request {
     // 全部实例请求拦截器
     this.instance.interceptors.request.use(
       (config) => {
-        console.log('所有实例都有的拦截器:请求拦截成功');
+        // console.log('所有实例都有的拦截器:请求拦截成功');
         if (this.showLoading) {
           this.loadingInstance = ElLoading.service({
             lock: true,
@@ -48,17 +48,18 @@ class Request {
         return config;
       },
       (err) => {
-        console.log('所有实例都有的拦截器:请求拦截失败', err);
+        // console.log('所有实例都有的拦截器:请求拦截失败', err);
       }
     );
     // 全部实例响应拦截器
     this.instance.interceptors.response.use(
       (res) => {
-        console.log('所有实例都有的拦截器:响应拦截成功');
+        // console.log('所有实例都有的拦截器:响应拦截成功');
         // Loading should be closed asynchronously
         // 关闭loading
         this.loadingInstance?.close();
         const data = res.data;
+
         if (data.returnCode === '-1001') {
           console.log('请求失败');
         } else {
@@ -66,7 +67,7 @@ class Request {
         }
       },
       (err) => {
-        console.log('所有实例都有的拦截器:响应拦截失败', err);
+        // console.log('所有实例都有的拦截器:响应拦截失败', err);
         // Loading should be closed asynchronously
         this.loadingInstance?.close();
         if (err.response.status === 404) {

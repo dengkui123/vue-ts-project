@@ -18,22 +18,42 @@
 </template>
 
 <script lang="ts">
-import { ElForm } from 'element-plus';
 import { defineComponent, reactive, ref } from 'vue';
+import { ElForm } from 'element-plus';
+import localCache from '@/utils/cache';
+
 import { rules } from '../config/account-config';
+import { useStore } from 'vuex';
+import { useRoute, useRouter } from 'vue-router';
 
 export default defineComponent({
   setup() {
+    const store = useStore();
+    const route = useRoute();
+    // 路由守卫 query: { redirect:  }
     const account = reactive({
-      name: '',
-      password: ''
+      name: localCache.getCache('name') ?? '',
+      password: localCache.getCache('password') ?? ''
     });
 
     const formRef = ref<InstanceType<typeof ElForm>>();
-    const loginAction = () => {
+    const loginAction = (isKeepPassword: boolean) => {
       formRef.value?.validate((valid) => {
         if (!valid) return;
-        console.log('进行登录');
+        // 1.判断是否需要记住密码
+        if (isKeepPassword) {
+          // 本地缓存
+          localCache.setCache('name', account.name);
+          localCache.setCache('password', account.password);
+        } else {
+          localCache.deleteCache('name');
+          localCache.deleteCache('password');
+        }
+        // 2.进行登陆
+        store.dispatch('login/accountLoginAction', {
+          ...account,
+          ...route.query
+        });
       });
     };
 
@@ -50,7 +70,7 @@ export default defineComponent({
 <style lang="less" scoped>
 .login-account {
   margin-top: 20px;
-  ::v-deep .el-form {
+  :deep(.el-form) {
     .el-form-item {
       .el-form-item__label {
         line-height: 40px;

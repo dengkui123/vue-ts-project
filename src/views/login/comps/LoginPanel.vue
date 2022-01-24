@@ -1,18 +1,18 @@
 <template>
   <div class="login-panel">
     <h1 class="title">后台管理系统</h1>
-    <el-tabs type="border-card" stretch>
-      <el-tab-pane>
+    <el-tabs type="border-card" stretch v-model="currentTab">
+      <el-tab-pane name="account">
         <template #label>
           <span class="tabs flex">账号登录</span>
         </template>
         <LoginAccount ref="accountRef" />
       </el-tab-pane>
-      <el-tab-pane>
+      <el-tab-pane name="phone">
         <template #label>
           <span class="tabs flex">手机登录</span>
         </template>
-        <LoginPhone />
+        <LoginPhone ref="phoneRef" />
       </el-tab-pane>
       <div class="account-control flex">
         <el-checkbox v-model="isKeepPassword">记住密码</el-checkbox>
@@ -32,23 +32,33 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import LoginPhone from './login-phone.vue';
-import LoginAccount from './login-account.vue';
+import LoginPhone from './LoginPhone.vue';
+import LoginAccount from './LoginAccount.vue';
+
 export default defineComponent({
   components: {
     LoginPhone,
     LoginAccount
   },
   setup() {
-    let isKeepPassword = ref(true);
+    // 定义属性
+    const isKeepPassword = ref(true);
     const accountRef = ref<InstanceType<typeof LoginAccount>>(); //获取组件对象实例的类型
+    const phoneRef = ref<InstanceType<typeof LoginPhone>>();
+    const currentTab = ref<string>('account');
+    // 定义方法
     const handleLoginClick = () => {
-      accountRef.value?.loginAction();
+      if (currentTab.value === 'account') {
+        accountRef.value?.loginAction(isKeepPassword.value);
+      } else {
+        phoneRef.value?.loginAction(isKeepPassword.value);
+      }
     };
     return {
       isKeepPassword,
       handleLoginClick,
-      accountRef
+      accountRef,
+      currentTab
     };
   }
 });
