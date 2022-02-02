@@ -4,12 +4,12 @@ export const searchFormConfig: IForm = {
   labelWidth: '80px',
   itemStyle: {
     width: '100%',
-    padding: '10px 0'
+    padding: '5px 0'
   },
   colLayout: {
     xl: 6,
-    lg: 8,
-    md: 12,
+    lg: 6,
+    md: 8,
     sm: 12,
     xs: 24
   },
@@ -24,16 +24,33 @@ export const searchFormConfig: IForm = {
     {
       field: 'name',
       type: 'input',
-      label: '角色',
+      label: '用户名',
       // rules: [],
-      placeholder: '请输入角色名'
+      placeholder: '请输入用户名'
+    },
+
+    {
+      field: 'address',
+      type: 'input',
+      label: '城市',
+      // rules: [],
+      placeholder: '请输入城市',
+      otherOptions: {
+        style: 'width: 100%'
+      }
     },
     {
-      field: 'intro',
-      type: 'input',
-      label: '权限',
-      // rules: [],
-      placeholder: '请输入权限'
+      field: 'status',
+      type: 'select',
+      label: '用户状态',
+      placeholder: '请选择用户状态',
+      options: [
+        { title: '启用', value: 1 },
+        { title: '禁用', value: 0 }
+      ],
+      otherOptions: {
+        style: 'width: 100%'
+      }
     },
     {
       field: 'createAt',

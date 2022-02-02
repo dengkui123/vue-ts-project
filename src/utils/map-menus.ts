@@ -3,7 +3,7 @@ import { IMenuItem } from '@/components/nav-menu/types';
 import { RouteRecordRaw } from 'vue-router';
 
 let firstMenu: IMenuItem;
-
+// 动态生成路由
 export function mapMenusToRoutes(userMenus: any[]): RouteRecordRaw[] {
   const routes: RouteRecordRaw[] = [];
   // 1.先去加载默认所有的routes
@@ -36,6 +36,7 @@ export function mapMenusToRoutes(userMenus: any[]): RouteRecordRaw[] {
 
   return routes;
 }
+
 // 导出路径对应菜单树
 export function pathMapBreadcrumbs(
   userMenus: IMenuItem[],
@@ -65,5 +66,20 @@ export function pathMapToMenu(
     }
   }
 }
-
 export { firstMenu };
+
+export function mapMenusToPermissions(userMenus: any[]) {
+  const permission: string[] = [];
+  const _recurseGetPermission = (menus: any[]) => {
+    for (const menu of menus) {
+      if (menu.type === 1 || menu.type === 2) {
+        _recurseGetPermission(menu.children ?? []);
+      } else if (menu.type === 3) {
+        permission.push(menu.permission);
+      }
+    }
+  };
+
+  _recurseGetPermission(userMenus);
+  return permission;
+}

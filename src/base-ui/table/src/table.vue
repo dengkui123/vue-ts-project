@@ -1,6 +1,7 @@
 <template>
   <div class="kk-table">
     <div class="header">
+      <!-- header插槽 -->
       <slot name="header">
         <div class="title">{{ title }}</div>
         <div class="handler">
@@ -14,6 +15,7 @@
       style="width: 100%"
       header-align="center"
       @selection-change="handleSelectionChange"
+      v-bind="childrenProps"
     >
       <el-table-column
         v-if="showSelectColumn"
@@ -28,8 +30,8 @@
         align="center"
         width="80"
       ></el-table-column>
-      <template v-for="propItem in propList" :key="propItem.prop">
-        <el-table-column align="center" v-bind="propItem">
+      <template v-for="propItem in (propList as any)" :key="propItem.prop">
+        <el-table-column align="center" show-overflow-tooltip v-bind="propItem">
           <!-- 饿了么的作用域插槽 -->
           <template #default="scope">
             <!-- 具名作用域插槽 -->
@@ -45,6 +47,7 @@
     <div class="footer">
       <slot name="footer">
         <el-pagination
+          v-if="showPagination"
           v-model:currentPage="currentPage"
           :page-sizes="[5, 10, 20]"
           :page-size="pageSize"
@@ -63,11 +66,6 @@
 import { defineProps, defineEmits, ref, watch } from 'vue';
 
 const props = defineProps({
-  //表格标题
-  title: {
-    type: String,
-    default: ''
-  },
   //表格数据列表
   listData: {
     type: Array,
@@ -78,10 +76,19 @@ const props = defineProps({
     type: Number,
     default: 0
   },
+  pageInfo: {
+    type: Object,
+    default: () => ({ currentPage: 1, pageSize: 10 })
+  },
+  // 以下为配置文件props
+  //表格标题
+  title: {
+    type: String,
+    default: ''
+  },
   // 表格每行的属性列表
   propList: {
-    type: Array,
-    required: true
+    type: Array
   },
   //是否展示序号列
   showIndexColumn: {
@@ -92,13 +99,25 @@ const props = defineProps({
   showSelectColumn: {
     type: Boolean,
     default: false
+  },
+  childrenProps: {
+    type: Object,
+    default: () => ({})
+  },
+  showPagination: {
+    type: Boolean,
+    default: true
   }
 });
 const emit = defineEmits(['updatePage']);
 
-const currentPage = ref(1);
-const pageSize = ref(10);
+const currentPage = ref(props.pageInfo.currentPage);
+const pageSize = ref(props.pageInfo.pageSize);
 
+watch(props.pageInfo, () => {
+  currentPage.value = props.pageInfo.currentPage;
+  pageSize.value = props.pageInfo.pageSize;
+});
 const handleSelectionChange = (value: any) => {
   console.log(123);
 };
@@ -111,6 +130,7 @@ const handleCurrentChange = (value: any) => {
 };
 const handleSizeChange = (value: any) => {
   pageSize.value = value;
+  currentPage.value = 1;
   emit('updatePage', {
     currentPage: 1,
     pageSize: pageSize.value

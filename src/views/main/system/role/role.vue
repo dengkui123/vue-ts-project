@@ -1,9 +1,14 @@
 <template>
   <div class="user">
-    <page-search :searchFormConfig="searchFormConfig"></page-search>
+    <page-search
+      :searchFormConfig="searchFormConfig"
+      @resetBtnClick="handleReset"
+      @searchBtnClick="handleSearch"
+    ></page-search>
     <page-content
       :contentTableConfig="contentTableConfig"
       pageName="role"
+      ref="pageContentRef"
     ></page-content>
   </div>
 </template>
@@ -18,8 +23,9 @@ import PageContent from '@/components/page-content';
 // 搜索配置
 import { searchFormConfig } from './config/search.config';
 // 表格配置
-import { contentTableConfig } from './config/table.config';
-
+import { contentTableConfig } from './config/content.config';
+//hooks
+import { usePageSearch } from '@/hooks/use-page-search';
 export default defineComponent({
   name: 'user',
   components: {
@@ -27,9 +33,13 @@ export default defineComponent({
     PageContent
   },
   setup() {
+    const [pageContentRef, handleReset, handleSearch] = usePageSearch();
     return {
       searchFormConfig,
-      contentTableConfig
+      contentTableConfig,
+      pageContentRef,
+      handleReset,
+      handleSearch
     };
   }
 });

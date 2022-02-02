@@ -1,5 +1,5 @@
 <template>
-  <div class="kk-form">
+  <div class="kk-form" :style="formStyle">
     <div class="header">
       <slot name="header"></slot>
     </div>
@@ -7,7 +7,12 @@
       <el-row :gutter="40">
         <template v-for="item in formItems" :key="item.label">
           <el-col v-bind="colLayout">
-            <el-form-item :label="item.label" :style="itemStyle">
+            <el-form-item
+              v-if="!item.isHidden"
+              :label="item.label"
+              :rules="item.rules"
+              :style="itemStyle"
+            >
               <!-- input || password -->
               <template
                 v-if="item.type === 'input' || item.type === 'password'"
@@ -30,6 +35,7 @@
                     v-for="option in item.options"
                     :key="option.value"
                     :value="option.value"
+                    :label="option.title"
                   >
                     {{ option.title }}
                   </el-option>
@@ -72,6 +78,11 @@ export default defineComponent({
     labelWidth: {
       type: String,
       default: '80px'
+    },
+    // 表单组件样式
+    formStyle: {
+      type: Object,
+      default: () => ({ padding: '20px' })
     },
     // 单个表单样式
     itemStyle: {
@@ -118,14 +129,11 @@ export default defineComponent({
 </script>
 
 <style lang="less" scoped>
-.kk-form {
-  padding: 20px;
-  .header {
-    color: red;
-  }
-  .btn {
-    text-align: right;
-    // margin: 0 20px 20px 0;
-  }
+.header {
+  color: red;
+}
+.btn {
+  text-align: right;
+  // margin: 0 20px 20px 0;
 }
 </style>

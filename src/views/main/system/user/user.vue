@@ -9,53 +9,114 @@
       :contentTableConfig="contentTableConfig"
       pageName="users"
       ref="pageContentRef"
-    ></page-content>
+      @add-btn-click="handleNewData"
+      @edit-btn-click="handleEditData"
+    >
+      <template #headerBtn> 新建用户 </template>
+    </page-content>
+    <page-modal
+      :modalFormConfig="modalFormConfig"
+      pageName="users"
+      ref="pageModelRef"
+      :initInfo="initInfo"
+      :dialogTitle="dialogTitle"
+    ></page-modal>
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 // user页面 -> page/search公共组件 -> table/form子组件
 
 // pageName!!!当前页面的类型（请求接口需用到的区分参数）
-import { defineComponent, ref } from 'vue';
+import { computed, defineComponent, ref, watch } from 'vue';
 // 搜索组件
 import PageSearch from '@/components/page-search';
 // 表格内容组件
 import PageContent from '@/components/page-content';
+// 表单组件
+import PageModal from '@/components/page-modal';
 // 搜索配置
 import { searchFormConfig } from './config/search.config';
 // 表格配置
-import { contentTableConfig } from './config/table.config';
+import { contentTableConfig } from './config/content.config';
+
+// 表单配置
+import { modalConfig } from './config/modal.config';
+
 // hooks
 import { usePageSearch } from '@/hooks/use-page-search';
+import { usePageModal } from '@/hooks/use-page-modal';
+import { useStore } from '@/store';
 
-export default defineComponent({
-  name: 'user',
-  components: {
-    PageSearch,
-    PageContent
-  },
-  setup() {
-    // 此部分已移入hooks(set-page-search)
-    // const pageContentRef = ref<InstanceType<typeof PageContent>>();
-    // // 调用子组件（pageContent）的获取数据的方法
-    // // 该方法在 <script setup> 语法糖下需要将子组件方法用 defineExpose 暴露出来
-    // const handleReset = () => {
-    //   pageContentRef.value.getPageData();
-    // };
-    // const handleSearch = (formData: any) => {
-    //   pageContentRef.value.getPageData(formData);
-    // };
-    const [pageContentRef, handleReset, handleSearch] = usePageSearch();
-    return {
-      searchFormConfig,
-      contentTableConfig,
-      pageContentRef,
-      handleReset,
-      handleSearch
-    };
-  }
+defineComponent({
+  PageSearch,
+  PageContent,
+  PageModal
 });
+// // 此部分已移入hooks(set-page-search)
+// const pageContentRef = ref<InstanceType<typeof PageContent>>();
+// // 调用子组件（pageContent）的获取数据的方法
+// // 该方法在 <script setup> 语法糖下需要将子组件方法用 defineExpose 暴露出来
+// const handleReset = () => {
+//   pageContentRef.value?.getPageData();
+// };
+// const handleSearch = (formData: any) => {
+//   pageContentRef.value.getPageData(formData);
+// };
+
+// 搜索hooks（表格ref、重置、搜索）
+const [pageContentRef, handleReset, handleSearch] = usePageSearch();
+
+// pageModel相关hook逻辑(单个表单项的显示和隐藏)
+// 1. 处理密码的逻辑
+const newCallBack = () => {
+  const passwordItem = modalConfig.formItems.find(
+    (item) => item.field === 'password'
+  );
+  passwordItem!.isHidden = false;
+};
+const editCallBack = () => {
+  const passwordItem = modalConfig.formItems.find(
+    (item) => item.field === 'password'
+  );
+  passwordItem!.isHidden = true;
+};
+// 2. 动态添加部门和角色列表
+const store = useStore();
+// 通过计算属性来监听vuex数据的改变
+const modalFormConfig = computed(() => {
+  const departmentItem = modalConfig.formItems.find(
+    (item) => item.field === 'departmentId'
+  );
+  departmentItem!.options = store.state.entireDepartment.map((item) => {
+    return { title: item.name, value: item.id };
+  });
+
+  const roleItem = modalConfig.formItems.find(
+    (item) => item.field === 'roleId'
+  );
+  roleItem!.options = store.state.entireRole.map((item) => {
+    return { title: item.name, value: item.id };
+  });
+  return modalConfig;
+});
+
+// 表单hooks(表单ref、表单初始值、新建、编辑)
+const [
+  pageModelRef,
+  initInfo,
+  handleNewData,
+  handleEditData,
+  dialogTitleIndex
+] = usePageModal(newCallBack, editCallBack);
+
+const dialogTitle = ref('');
+watch(
+  () => dialogTitleIndex.value,
+  (newValue) => {
+    dialogTitle.value = newValue === 1 ? '新建用户' : '编辑用户';
+  }
+);
 </script>
 
 <style lang="less" scoped></style>

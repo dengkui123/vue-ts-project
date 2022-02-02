@@ -8,8 +8,10 @@ export interface IFormItem {
   placeholder?: any;
   // 针对select
   options?: any[];
-  // 针对特殊的属性
+  // 针对单个表单项的特殊属性
   otherOptions?: any;
+  // 是否隐藏部分表单项
+  isHidden?: boolean;
 }
 
 export interface IForm {
@@ -17,4 +19,5 @@ export interface IForm {
   labelWidth?: string;
   colLayout?: any;
   itemStyle?: any;
+  formStyle?: any;
 }

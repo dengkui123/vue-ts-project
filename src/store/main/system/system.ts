@@ -4,15 +4,26 @@ import router from '@/router';
 import { IRootState } from '@/store/types';
 import { ISystemState } from './types';
 
-import { getPageListAction } from '@/api/main/system/system';
+import {
+  getPageList,
+  deletePageDataById,
+  addPageData,
+  editPageData
+} from '@/api/main/system/system';
+
 const systemModule: Module<ISystemState, IRootState> = {
   namespaced: true,
   state() {
     return {
+      searchParams: {},
       usersList: [],
       usersCount: 0,
       roleList: [],
-      roleCount: 0
+      roleCount: 0,
+      goodsList: [],
+      goodsCount: 0,
+      menuList: [],
+      menuCount: 0
     };
   },
   getters: {
@@ -27,26 +38,42 @@ const systemModule: Module<ISystemState, IRootState> = {
     },
     pageListCount: (state) => (pageName: string) => {
       return (state as any)[`${pageName}Count`] ?? [];
-    }
+    },
+    searchParams: (state) => state.searchParams
   },
   mutations: {
-    setUsersList(state, usersList: any[]) {
-      state.usersList = usersList;
+    setSearchParams(state, params: any) {
+      state.searchParams = params;
     },
-    setUsersCount(state, usersCount: number) {
-      state.usersCount = usersCount;
+    setUsersList(state, list: any[]) {
+      state.usersList = list;
     },
-    setRoleList(state, roleList: any[]) {
-      state.roleList = roleList;
+    setUsersCount(state, count: number) {
+      state.usersCount = count;
     },
-    setRoleCount(state, roleCount: number) {
-      state.roleCount = roleCount;
+    setRoleList(state, list: any[]) {
+      state.roleList = list;
+    },
+    setRoleCount(state, count: number) {
+      state.roleCount = count;
+    },
+    setGoodsList(state, list: any[]) {
+      state.goodsList = list;
+    },
+    setGoodsCount(state, count: number) {
+      state.goodsCount = count;
+    },
+    setMenuList(state, list: any[]) {
+      state.menuList = list;
+    },
+    setMenuCount(state, count: number) {
+      state.menuCount = count;
     }
   },
   actions: {
     // 异步请求数据
     async getPageListAction({ commit }, payload: any) {
-      const pageName = payload.pageName;
+      const { pageName, queryInfo } = payload;
       const pageUrl = `/${pageName}/list`;
 
       // switch (pageName) {
@@ -59,10 +86,11 @@ const systemModule: Module<ISystemState, IRootState> = {
       // }
 
       // 1. 页面发送请求
-      const pageResult = await getPageListAction(pageUrl, payload.queryInfo);
+      const pageResult = await getPageList(pageUrl, queryInfo);
 
       // 2. 数据保存到state
-      const { list, totalCount } = pageResult.data;
+      const { list, totalCount = list.length } = pageResult.data;
+
       commit(
         `set${pageName.slice(0, 1).toUpperCase() + pageName.slice(1)}List`,
         list
@@ -71,6 +99,52 @@ const systemModule: Module<ISystemState, IRootState> = {
         `set${pageName.slice(0, 1).toUpperCase() + pageName.slice(1)}Count`,
         totalCount
       );
+    },
+    // 保存查询条件
+    async setSearchParamsAction({ state, commit }, payload: any) {
+      commit('setSearchParams', { ...payload });
+    },
+
+    // 删除数据
+    async deletePageDataAction({ state, dispatch }, payload: any) {
+      // 1.pageName -> /users
+      // 2.id -> /users/id
+      const { pageName, id } = payload;
+      const pageUrl = `/${pageName}/${id}`;
+      await deletePageDataById(pageUrl);
+      // 获取最新数据
+      dispatch('getPageListAction', {
+        pageName,
+        queryInfo: state.searchParams
+      });
+    },
+
+    // 添加数据
+    async addPageDataAction({ state, dispatch }, payload: any) {
+      // 1. 创建数据请求
+      const { pageName, newData } = payload;
+      const pageUrl = `/${pageName}`;
+
+      await addPageData(pageUrl, newData);
+      // 2. 请求最新的数据
+      dispatch('getPageListAction', {
+        pageName,
+        queryInfo: state.searchParams
+      });
+    },
+
+    // 编辑数据
+    async editPageDataAction({ state, dispatch }, payload: any) {
+      // 1. 创建数据请求
+      const { pageName, id, editData } = payload;
+      const pageUrl = `/${pageName}/${id}`;
+
+      await editPageData(pageUrl, editData);
+      // 2. 请求最新的数据
+      dispatch('getPageListAction', {
+        pageName,
+        queryInfo: state.searchParams
+      });
     }
   }
 };

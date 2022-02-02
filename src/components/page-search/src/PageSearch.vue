@@ -17,6 +17,8 @@
 import { defineComponent, ref } from 'vue';
 import KkForm from '@/base-ui/form';
 
+import { useStore } from '@/store';
+
 export default defineComponent({
   props: {
     searchFormConfig: {
@@ -29,6 +31,7 @@ export default defineComponent({
     KkForm
   },
   setup(props, { emit }) {
+    const store = useStore();
     // 1.优化一： formData中的属性应该由当前页面的配置文件动态决定
     const formItems = props.searchFormConfig.formItems ?? [];
     const formOriginData: any = {};
@@ -45,7 +48,6 @@ export default defineComponent({
       // 清空表单(此处调用的子组件为setup（）方式，所以有可选链)
       kkFormRef.value?.handleSonReset({ ...formOriginData });
       // 此处也可用element的resetForm方法进行重置，方式同上
-
       // 重新获取数据(提交到父组件（如user）)
       emit('resetBtnClick');
     };

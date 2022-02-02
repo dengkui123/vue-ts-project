@@ -6,7 +6,14 @@ interface IPropType {
   align?: string;
   slotName?: string; // 插槽名
 }
-export const contentTableConfig = {
+
+interface ITableConfig<T> {
+  title: string;
+  propList: T[];
+  showIndexColumn?: boolean;
+  showSelectColumn?: boolean;
+}
+export const contentTableConfig: ITableConfig<IPropType> = {
   // 表格标题
   title: '用户列表',
 

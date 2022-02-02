@@ -40,7 +40,7 @@ export const searchFormConfig: IForm = {
       type: 'input',
       label: '手机号',
       // rules: [],
-      placeholder: '请输入手机号澳门',
+      placeholder: '请输入手机号',
       otherOptions: {
         style: 'width: 100%'
       }

@@ -18,7 +18,7 @@
           <!-- 一级菜单 -->
           <el-sub-menu :index="item.id + ''">
             <template #title>
-              <kk-icon :name="item.icon.slice(7)"></kk-icon>
+              <kk-icon :name="item.icon.slice(8)"></kk-icon>
               <span>{{ item.name }}</span>
             </template>
             <template v-for="subItem in item.children" :key="subItem.id">
@@ -35,7 +35,7 @@
         <!-- 只有一级菜单 -->
         <template v-else-if="item.type === 2">
           <el-menu-item :index="item.id + ''">
-            <kk-icon :name="item.icon.slice(7)"></kk-icon>
+            <kk-icon :name="item.icon.slice(8)"></kk-icon>
             <span>{{ item.name }}</span>
           </el-menu-item>
         </template>
@@ -59,6 +59,7 @@ export default defineComponent({
       default: false
     }
   },
+
   components: {
     KkIcon
   },
