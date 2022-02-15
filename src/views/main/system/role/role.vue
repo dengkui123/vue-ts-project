@@ -77,10 +77,10 @@ const [pageContentRef, handleReset, handleSearch] = usePageSearch();
 const elTreeRef = ref<InstanceType<typeof ElTree>>();
 const editCallBack = (item: any) => {
   const leafKeys = getMenuLeafKeys(item.menuList);
-  console.log(item);
+  // console.log(item);
 
   nextTick(() => {
-    console.log(elTreeRef.value);
+    // console.log(elTreeRef.value);
     elTreeRef.value?.setCheckedKeys(leafKeys, false);
   });
 };

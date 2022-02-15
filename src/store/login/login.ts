@@ -36,7 +36,7 @@ const loginModule: Module<ILoginState, IRootState> = {
       // userMenu => routes
       const routes = mapMenusToRoutes(userMenu);
       // 将routes => router.home.children
-      console.log(routes);
+      // console.log(routes);
       routes.forEach((route) => {
         router.addRoute('Main', route);
       });
@@ -63,7 +63,7 @@ const loginModule: Module<ILoginState, IRootState> = {
 
       // 3. 获取用户菜单
       const { data: userMenu } = await getUserMenuByRoleId(userInfo.role.id);
-      console.log(userMenu);
+      // console.log(userMenu);
 
       commit('setUserMenu', userMenu);
       localCache.setCache('userMenu', userMenu);

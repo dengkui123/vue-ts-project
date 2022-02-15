@@ -61,7 +61,7 @@ class Request {
         const data = res.data;
 
         if (data.returnCode === '-1001') {
-          console.log('请求失败');
+          // console.log('请求失败');
         } else {
           return data;
         }
@@ -71,7 +71,7 @@ class Request {
         // Loading should be closed asynchronously
         this.loadingInstance?.close();
         if (err.response.status === 404) {
-          console.log('404错误');
+          // console.log('404错误');
         }
         return err;
       }
