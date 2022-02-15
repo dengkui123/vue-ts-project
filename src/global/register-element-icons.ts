@@ -17,7 +17,8 @@ import {
   Refresh,
   Edit,
   Delete,
-  Plus
+  Plus,
+  Warning
 } from '@element-plus/icons-vue';
 
 export const icons = [
@@ -36,7 +37,8 @@ export const icons = [
   Refresh,
   Edit,
   Delete,
-  Plus
+  Plus,
+  Warning
 ];
 //按需导出图标**组件**
 export default function (app: App): void {

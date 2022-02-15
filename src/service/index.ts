@@ -31,9 +31,4 @@ const service = new Request({
     }
   }
 });
-
-const service2 = new Request({
-  baseURL: 'http://httpbin.org',
-  timeout: TIME_OUT
-});
-export { service, service2 };
+export { service };

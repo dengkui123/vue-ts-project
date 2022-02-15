@@ -8,7 +8,7 @@
       <el-dropdown-menu>
         <el-dropdown-item icon="User">用户信息</el-dropdown-item>
         <el-dropdown-item icon="Setting">系统管理</el-dropdown-item>
-        <el-dropdown-item icon="SwitchButton" divided
+        <el-dropdown-item icon="SwitchButton" divided @click="logout"
           >退出登录</el-dropdown-item
         >
       </el-dropdown-menu>
@@ -19,6 +19,8 @@
 <script lang="ts">
 import { defineComponent, reactive, computed } from 'vue';
 import { useStore } from '@/store';
+import { useRouter } from 'vue-router';
+import localCache from '@/utils/cache';
 export default defineComponent({
   setup() {
     const store = useStore();
@@ -27,9 +29,15 @@ export default defineComponent({
         'https://img2.baidu.com/it/u=2090606195,1473750087&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500'
     });
     const name = computed(() => store.state.login.userInfo.name);
+    const router = useRouter();
+    const logout = () => {
+      localCache.deleteCache('token');
+      router.push('/main');
+    };
     return {
       name,
-      ...state
+      ...state,
+      logout
     };
   }
 });

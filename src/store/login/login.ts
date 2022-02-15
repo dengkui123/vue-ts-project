@@ -10,6 +10,7 @@ import { mapMenusToPermissions, mapMenusToRoutes } from '@/utils/map-menus';
 // import { IAccount } from '@/api/login/type';
 import { IRootState } from '../types';
 import { ILoginState } from './types';
+import { IAccount } from '@/api/login/type';
 
 const loginModule: Module<ILoginState, IRootState> = {
   namespaced: true,
@@ -46,7 +47,7 @@ const loginModule: Module<ILoginState, IRootState> = {
     }
   },
   actions: {
-    async accountLoginAction({ commit }, payload) {
+    async accountLoginAction({ commit }, payload: IAccount) {
       // 1.实现登录逻辑
       const account = { name: payload.name, password: payload.password };
       const loginResult = await accountLogin(account);
@@ -72,7 +73,7 @@ const loginModule: Module<ILoginState, IRootState> = {
       });
     },
     // vuex初始化信息
-    loadLocalLogin({ commit }) {
+    loadLocalLogin({ commit, dispatch }) {
       const token = localCache.getCache('token');
       if (token) {
         commit('setToken', token);

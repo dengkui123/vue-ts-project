@@ -1,6 +1,7 @@
 export interface IAccount {
   name: string;
   password: number;
+  redirect?: string;
 }
 export interface ILoginResult {
   id: number;

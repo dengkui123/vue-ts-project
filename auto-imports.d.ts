@@ -6,12 +6,14 @@ declare global {
   const ElBreadcrumb: typeof import('element-plus/es')['ElBreadcrumb'];
   const ElBreadcrumbItem: typeof import('element-plus/es')['ElBreadcrumbItem'];
   const ElButton: typeof import('element-plus/es')['ElButton'];
+  const ElCard: typeof import('element-plus/es')['ElCard'];
   const ElCheckbox: typeof import('element-plus/es')['ElCheckbox'];
   const ElCol: typeof import('element-plus/es')['ElCol'];
   const ElConfigProvider: typeof import('element-plus/es')['ElConfigProvider'];
   const ElContainer: typeof import('element-plus/es')['ElContainer'];
   const ElDatePicker: typeof import('element-plus/es')['ElDatePicker'];
   const ElDialog: typeof import('element-plus/es')['ElDialog'];
+  const ElDivider: typeof import('element-plus/es')['ElDivider'];
   const ElDropdown: typeof import('element-plus/es')['ElDropdown'];
   const ElDropdownItem: typeof import('element-plus/es')['ElDropdownItem'];
   const ElDropdownMenu: typeof import('element-plus/es')['ElDropdownMenu'];

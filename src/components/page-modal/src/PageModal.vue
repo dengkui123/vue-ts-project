@@ -7,6 +7,7 @@
     center
   >
     <kk-form v-model="formData" v-bind="modalFormConfig"></kk-form>
+    <slot></slot>
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="dialogVisible = false">取消</el-button>
@@ -29,7 +30,13 @@ const props = defineProps({
     type: Object,
     required: true
   },
+  // 表单初始值
   initInfo: {
+    type: Object,
+    default: () => ({})
+  },
+  // 菜单权限相关信息
+  otherInfo: {
     type: Object,
     default: () => ({})
   },
@@ -46,7 +53,7 @@ const props = defineProps({
 const dialogVisible = ref(false);
 
 const formData = ref<any>({});
-
+// 监听表单初始值动态添加到formData
 watch(
   () => props.initInfo,
   (newValue) => {
@@ -55,8 +62,11 @@ watch(
     }
   }
 );
+
 // 点击确定之后的逻辑
 const store = useStore();
+// 发送初始化请求（完整的role/department)
+store.dispatch('getInitDataAction');
 
 const handleConfirmClick = () => {
   if (Object.keys(props.initInfo).length) {
@@ -64,13 +74,13 @@ const handleConfirmClick = () => {
     store.dispatch('system/editPageDataAction', {
       pageName: props.pageName,
       id: props.initInfo.id,
-      editData: { ...formData.value }
+      editData: { ...formData.value, ...props.otherInfo }
     });
   } else {
     // 新建
     store.dispatch('system/addPageDataAction', {
       pageName: props.pageName,
-      newData: { ...formData.value }
+      newData: { ...formData.value, ...props.otherInfo }
     });
   }
   dialogVisible.value = false;

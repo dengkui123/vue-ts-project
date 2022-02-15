@@ -1,7 +1,7 @@
 import { ref } from 'vue';
 import PageModal from '@/components/page-modal';
 
-type CallBackFn = () => void;
+type CallBackFn = (item?: any) => void;
 
 export function usePageModal(
   newCallBack?: CallBackFn,
@@ -27,7 +27,7 @@ export function usePageModal(
       initInfo.value = { ...item };
       dialogTitleIndex.value = 2;
     }
-    editCallBack && editCallBack();
+    editCallBack && editCallBack(item);
   };
 
   return [

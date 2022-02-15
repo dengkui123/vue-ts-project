@@ -53,16 +53,6 @@ defineComponent({
   PageContent,
   PageModal
 });
-// // 此部分已移入hooks(set-page-search)
-// const pageContentRef = ref<InstanceType<typeof PageContent>>();
-// // 调用子组件（pageContent）的获取数据的方法
-// // 该方法在 <script setup> 语法糖下需要将子组件方法用 defineExpose 暴露出来
-// const handleReset = () => {
-//   pageContentRef.value?.getPageData();
-// };
-// const handleSearch = (formData: any) => {
-//   pageContentRef.value.getPageData(formData);
-// };
 
 // 搜索hooks（表格ref、重置、搜索）
 const [pageContentRef, handleReset, handleSearch] = usePageSearch();
@@ -81,7 +71,7 @@ const editCallBack = () => {
   );
   passwordItem!.isHidden = true;
 };
-// 2. 动态添加部门和角色列表
+// 2. 动态添加部门和角色列表(数据字典)
 const store = useStore();
 // 通过计算属性来监听vuex数据的改变
 const modalFormConfig = computed(() => {
@@ -101,7 +91,7 @@ const modalFormConfig = computed(() => {
   return modalConfig;
 });
 
-// 表单hooks(表单ref、表单初始值、新建、编辑)
+// 表单hooks(表单ref、表单初始值、新建、编辑、对话框标题编号)
 const [
   pageModelRef,
   initInfo,
@@ -110,6 +100,7 @@ const [
   dialogTitleIndex
 ] = usePageModal(newCallBack, editCallBack);
 
+// 修改对话框标题
 const dialogTitle = ref('');
 watch(
   () => dialogTitleIndex.value,

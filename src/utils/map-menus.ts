@@ -67,7 +67,7 @@ export function pathMapToMenu(
   }
 }
 export { firstMenu };
-
+// 菜单权限列表
 export function mapMenusToPermissions(userMenus: any[]) {
   const permission: string[] = [];
   const _recurseGetPermission = (menus: any[]) => {
@@ -82,4 +82,19 @@ export function mapMenusToPermissions(userMenus: any[]) {
 
   _recurseGetPermission(userMenus);
   return permission;
+}
+
+// 获取菜单叶子节点key
+export function getMenuLeafKeys(menuList: any[]) {
+  const leafKeys: number[] = [];
+  const _recurseGetLeaf = (menuList: any[]) => {
+    for (const menu of menuList) {
+      if (menu.children) {
+        _recurseGetLeaf(menu.children);
+      }
+      leafKeys.push(menu.id);
+    }
+  };
+  _recurseGetLeaf(menuList);
+  return leafKeys;
 }
