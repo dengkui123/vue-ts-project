@@ -16,17 +16,17 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/login',
     name: 'Login',
-    component: () => import('@/views/login/index.vue')
+    component: () => import('../views/login/index.vue')
   },
   {
     path: '/:patchMatch(.*)*',
     name: 'NotFound',
-    component: () => import('@/views/notFound/NotFound.vue')
+    component: () => import('../views/notFound/NotFound.vue')
   },
   {
     path: '/main',
     name: 'Main',
-    component: () => import('@/views/main/index.vue'),
+    component: () => import('../views/main/index.vue'),
     meta: { requiresAuth: true }
   }
 ];
