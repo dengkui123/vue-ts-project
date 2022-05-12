@@ -30,8 +30,10 @@
         align="center"
         width="80"
       ></el-table-column>
+      <!-- 主体部分 -->
       <template v-for="propItem in (propList as any)" :key="propItem.prop">
         <el-table-column align="center" show-overflow-tooltip v-bind="propItem">
+          <!-- 该区域普通文本内容不传 -->
           <!-- 饿了么的作用域插槽 -->
           <template #default="scope">
             <!-- 具名作用域插槽 -->

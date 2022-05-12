@@ -33,7 +33,7 @@
         >
       </template>
       <template v-slot:createAt="scope">
-        <span>{{ $dayjs.formatLocalTime(scope.row.createAt) }}</span>
+        <span>{{ $dayjs.formatTimestamp(scope.row.createAt) }}</span>
       </template>
       <template v-slot:updateAt="scope">
         <span>{{ $dayjs.formatLocalTime(scope.row.createAt) }}</span>

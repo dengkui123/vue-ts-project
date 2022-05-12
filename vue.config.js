@@ -31,6 +31,13 @@ module.exports = {
         resolvers: [ElementPlusResolver()]
       })
     ]
+  },
+
+  chainWebpack: (config) => {
+    config.plugin('html').tap((args) => {
+      args[0].title = '侃侃的小窝';
+      return args;
+    });
   }
   // configureWebpack: (config) => {
   //   config.resolve.alias = {
